@@ -1,0 +1,7 @@
+## Interface: 11200
+## Title: QoL
+## Notes: WoW QoL
+## Author: Bimer
+## Version: 1.0
+
+wow-qol.lua

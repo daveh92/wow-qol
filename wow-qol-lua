@@ -1,0 +1,26 @@
+local addonName = "InviteHelper"
+local addonVersion = "1.0"
+
+local inviteMessage = "Hi! I am an AddOn that automatically invites people who send a whisper with '?inv'."
+
+function invitePlayer(event, playerName)
+    if event == "CHAT_MSG_WHISPER" and string.match(playerName, "?inv") then
+        -- Invite the player to the current instance
+        GameTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+        GameTooltip:AddLine("Invited to instance")
+        GameTooltip:Show()
+        
+        local instance = GetInstanceInfo()
+        if instance then
+            InviteUnit(instance.id)
+        end
+    end
+end
+
+function Initialize(event, addonName)
+    -- Register for chat messages
+    ChatFrame_AddMessageEvent("CHAT_MSG_WHISPER", invitePlayer)
+end
+
+-- Register the addon with World of Warcraft
+local addon = LibStub:NewAddOn(addonName, addonVersion, Initialize)

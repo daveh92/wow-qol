@@ -133,5 +133,23 @@ end
 
 
 -- Kontext Menu Direkt am Spieler:
-ToggleDropDownMenu(1, nil, _G["DropDownList1"], "cursor", 0, 0)
-UnitPopup_ShowMenu(_G["DropDownList1"], "PLAYER", "target")
+-- Funktion, die das Standard-Kontextmenü für einen Spieler an der Mausposition öffnet
+local function ShowWoWPlayerContextMenu(playerName, frame)
+    -- Menü auf DropDownList1 an Mausposition anzeigen
+    ToggleDropDownMenu(1, nil, _G["DropDownList1"], "cursor", 0, 0)
+    -- Menütyp "PLAYER", Unit "playerName" (String)
+    UnitPopup_ShowMenu(_G["DropDownList1"], "PLAYER", playerName)
+end
+
+-- Hook auf alle ChatFrames, um Rechtsklick auf Spielernamen abzufangen
+for i = 1, NUM_CHAT_WINDOWS do
+    local chatFrame = _G["ChatFrame"..i]
+    chatFrame:HookScript("OnHyperlinkClick", function(self, link, text, button)
+        if button == "RightButton" then
+            local linkType, playerName = link:match("(%a+):([^:]+)")
+            if linkType == "player" and playerName then
+                ShowWoWPlayerContextMenu(playerName, self)
+            end
+        end
+    end)
+end

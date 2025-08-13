@@ -2,17 +2,15 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent("CHAT_MSG_WHISPER")
 
 frame:SetScript("OnEvent", function(self, event, msg, sender)
-    -- Text in Kleinbuchstaben umwandeln für Vergleich
-    local lowerMsg = string.lower(msg)
+    local lowerMsg = string.lower(msg or "")
 
-    -- Prüfen ob die Nachricht "?inv" enthält
+    -- Prüfen ob exakt "?inv" geschickt wurde
     if lowerMsg == "?inv" then
-        -- Falls du in keiner Gruppe bist -> direkt einladen
-        if not IsInGroup() and not IsInRaid() then
-            InviteUnit(sender)
+        -- Gruppen-/Raid-Check mit Classic-Funktionen
+        if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
+            InviteByName(sender)
         else
-            -- Falls schon in Gruppe, kann man trotzdem versuchen einzuladen
-            InviteUnit(sender)
+            InviteByName(sender) -- lädt trotzdem ein
         end
     end
 end)

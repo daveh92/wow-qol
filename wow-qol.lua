@@ -14,8 +14,8 @@ SlashCmdList["QOLHELP"] = function()
     print("  ?inv    - Einladung in die Gruppe")
     print("  ?lead   - Übertrage Gruppenleiterrolle an Sender (wenn in Gruppe und du Leiter bist)")
     print("|cffccccccSlash-Befehle (ohne Freundeslisten-Beschränkung):|r")
-    print("  !inv NAME    - Lade Spieler mit Namen NAME in die Gruppe ein")
-    print("  !lead POS    - Übertrage Gruppenleiterrolle an Partymitglied an Position POS (0=du, 1-4 Gruppenmitglieder)")
+    print("  /inv NAME    - Lade Spieler mit Namen NAME in die Gruppe ein")
+    print("  /lead POS    - Übertrage Gruppenleiterrolle an Partymitglied an Position POS (0=du, 1-4 Gruppenmitglieder)")
     print("|cff00ff00==============================================|r")
 end
 
@@ -111,23 +111,23 @@ frame:SetScript("OnEvent", function(self, event, msg, sender)
 end)
 
 -- Slash Befehle registrieren
-SLASH_AUTOINVITEINV1 = "!inv"
+SLASH_AUTOINVITEINV1 = "/inv"
 SlashCmdList["AUTOINVITEINV"] = function(msg)
     local name = msg:match("^(%S+)$")
     if name then
         TryInvite(name)
     else
-        print("|cffffff00[AutoInvite]|r Benutze: !inv NAME")
+        print("|cffffff00[AutoInvite]|r Benutze: /inv NAME")
     end
 end
 
-SLASH_AUTOINVITELEAD1 = "!lead"
+SLASH_AUTOINVITELEAD1 = "/lead"
 SlashCmdList["AUTOINVITELEAD"] = function(msg)
     local index = tonumber(msg)
     if index then
         TryPromoteByPartyIndex(index)
     else
-        print("|cffffff00[AutoInvite]|r Benutze: !lead POSITION (0-4, 0 = Du)")
+        print("|cffffff00[AutoInvite]|r Benutze: /lead POSITION (0-4, 0 = Du)")
     end
 end
 

@@ -90,6 +90,22 @@ local function TryPromoteByPartyIndex(index)
     end
 end
 
+    --Loot Steuerung
+local function SetLootFFA()
+    if IsLeader() then
+        SetLootMethod("freeforall")
+        print("|cff00ff00[AutoInvite]|r Loot-Regel auf 'Free for All' gesetzt.")
+    end
+end
+
+local function SetLootGroup()
+    if IsLeader() then
+        -- group loot, Schwellenwert 2 = uncommon (grün)
+        SetLootMethod("group", "player", 2)
+        print("|cff00ff00[AutoInvite]|r Loot-Regel auf 'Group Loot' gesetzt.")
+    end
+end
+
 frame:SetScript("OnEvent", function(self, event, msg, sender)
     sender = Ambiguate(sender, "none")
     local msgLower = msg:lower()
@@ -101,10 +117,12 @@ frame:SetScript("OnEvent", function(self, event, msg, sender)
 
     if msgLower == keywordInvite then
         TryInvite(sender)
+        C_Timer.After(1, SetLootFFA)
         return
     end
 
     if msgLower == keywordLead then
+        SetLootGroup()
         TryPromoteByName(sender)
         return
     end

@@ -7,7 +7,7 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent("CHAT_MSG_WHISPER")
 frame:RegisterEvent("CHAT_MSG_PARTY")
 
-SLASH_QOLHELP1 = "!qol"
+SLASH_QOLHELP1 = "/qol"
 SlashCmdList["QOLHELP"] = function()
     print("|cff00ff00=== AutoInvite Addon Befehlsübersicht ===|r")
     print("|cffccccccWhisper-/Party-Befehle (nur Freunde):|r")

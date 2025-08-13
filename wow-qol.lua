@@ -107,42 +107,25 @@ local function SetLootGroup()
     end
 end
 
-frame:SetScript("OnEvent", function(self, event, arg1, arg2, arg3, arg4)
-    -- 1) Automatisches Annehmen von Gruppeneinladungen
-    if event == "PARTY_INVITE_REQUEST" then
-        local inviter = Ambiguate(arg1, "none")
-        if IsFriendByName(inviter) then
-            AcceptGroup()
-            StaticPopup_Hide("PARTY_INVITE")
-            print("|cff00ff00[AutoInvite]|r Einladung von " .. inviter .. " automatisch angenommen.")
-        else
-            print("|cffff0000[AutoInvite]|r Einladung von " .. inviter .. " ignoriert (nicht in Freundesliste).")
-        end
+frame:SetScript("OnEvent", function(self, event, msg, sender)
+    sender = Ambiguate(sender, "none")
+    local msgLower = msg:lower()
+
+    if not IsFriendByName(sender) then
+        -- Nur bei Whisper & Party Nachrichten
         return
     end
 
-    -- 2) Whisper- oder Party-Nachrichten auswerten
-    if event == "CHAT_MSG_WHISPER" or event == "CHAT_MSG_PARTY" then
-        local msg = arg1
-        local sender = Ambiguate(arg2, "none")
-        local msgLower = msg:lower()
+    if msgLower == keywordInvite then
+        TryInvite(sender)
+        C_Timer.After(1, SetLootFFA)
+        return
+    end
 
-        -- Nur Freunde
-        if not IsFriendByName(sender) then
-            return
-        end
-
-        if msgLower == keywordInvite then
-            TryInvite(sender)
-            C_Timer.After(1, SetLootFFA)
-            return
-        end
-
-        if msgLower == keywordLead then
-            SetLootGroup()
-            TryPromoteByName(sender)
-            return
-        end
+    if msgLower == keywordLead then
+        SetLootGroup()
+        TryPromoteByName(sender)
+        return
     end
 end)
 

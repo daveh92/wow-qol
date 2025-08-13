@@ -1,39 +1,18 @@
-local addonName = "InviteHelper"
-local addonVersion = "1.0"
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("CHAT_MSG_WHISPER")
 
-local groupName = "TestGroup" -- The name of the group to create
+frame:SetScript("OnEvent", function(self, event, msg, sender)
+    -- Text in Kleinbuchstaben umwandeln für Vergleich
+    local lowerMsg = string.lower(msg)
 
-function invitePlayer(event, playerName)
-    if event == "CHAT_MSG_WHISPER" and string.match(playerName, "?inv") then
-        -- Create a new group with the given name
-        GameTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
-        GameTooltip:AddLine("Creating group...")
-        GameTooltip:Show()
-        
-        local group = CreateGroup(groupName)
-        if not group then
-            GameTooltip:SetText("Error creating group", 1, 0, 0)
+    -- Prüfen ob die Nachricht "?inv" enthält
+    if lowerMsg == "?inv" then
+        -- Falls du in keiner Gruppe bist -> direkt einladen
+        if not IsInGroup() and not IsInRaid() then
+            InviteUnit(sender)
         else
-            GameTooltip:SetText("Created group " .. group.name .. " with ID " .. group.id, 0, 1, 0)
-        end
-        
-        -- Invite the player to the created group
-        local instance = GetInstanceInfo()
-        if instance then
-            local groupId = CreateGroup(instance.id, groupName)
-            if not groupId then
-                GameTooltip:SetText("Error inviting to group", 1, 0, 0)
-            else
-                GameTooltip:SetText("Invited player to group " .. groupName, 0, 1, 0)
-            end
+            -- Falls schon in Gruppe, kann man trotzdem versuchen einzuladen
+            InviteUnit(sender)
         end
     end
-end
-
-function Initialize(event, addonName)
-    -- Register for chat messages
-    ChatFrame_AddMessageEvent("CHAT_MSG_WHISPER", invitePlayer)
-end
-
--- Register the addon with World of Warcraft
-local addon = LibStub:NewAddOn(addonName, addonVersion, Initialize)
+end)
